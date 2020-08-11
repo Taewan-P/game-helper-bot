@@ -6,6 +6,7 @@ from urllib.request import Request, urlopen
 from urllib import parse
 
 app = discord.Client()
+mstatus = 0
 
 
 json_data = open(os.getcwd() + "/token/.config.json", encoding='utf-8').read()
@@ -24,6 +25,15 @@ async def on_ready():
 
 @app.event
 async def on_message(message):
+    global mstatus
+    if message.author.bot:
+        if mstatus == 1:
+            await message.add_reaction("\u2b55") # O
+            await message.add_reaction("\u274c") # X
+            mstatus = mstatus - 1
+        else:
+            return None
+
     if message.content == "!owsearch":
         embed = discord.Embed(title="Overwatch 점수 검색", description="'배틀태그#숫자' 형식으로 입력해주세요.", color=0x82CC62)
         embed.set_image(url="https://bnetcmsus-a.akamaihd.net/cms/blog_header/q4/Q4K237E1EGPI1467079634956.jpg")
@@ -103,5 +113,35 @@ async def on_message(message):
             else:
                 # Invalid
                 await message.channel.send("배틀태그가 유효하지 않습니다.")
+
+    if message.content == "!muteall":
+        if message.author.voice is None:
+            await message.channel.send("이 기능을 사용하려면 보이스 채널에 들어가 있어야 합니다!")
+        else:
+            mstatus = mstatus + 1
+            embed = discord.Embed(title="Among Us 전용 전체 음소거 기능", description="현재 음성채널에 있는 모든 사용자를 음소거하겠습니까? \n원하시면 :o:, 아니면 :x:를 눌러주세요.", color=0xFFD966)
+
+            await message.channel.send(embed=embed)
+
+            def check(reaction, user):
+                return user == message.author and (str(reaction.emoji) == "\u2b55" or str(reaction.emoji) == "\u274c")
+
+            try:
+                reaction, user = await app.wait_for('reaction_add', timeout=10.0, check=check)
+            except asyncio.TimeoutError:
+                await message.channel.send("시간초과!")
+
+            else:
+                if str(reaction.emoji) == "\u2b55":
+                    # await message.channel.send(administrator_id)
+                    member_list = message.author.voice.channel.members
+                    async with message.channel.typing():
+                        for member in member_list:
+                            await member.edit(mute=True, reason="Among Us Player Mute All")
+
+                    await message.channel.send("음소거 완료!")
+
+                elif str(reaction.emoji) == "\u274c":
+                    await message.channel.send("싫음 소환하지를 마. 귀찮게.")
 
 app.run(token)
