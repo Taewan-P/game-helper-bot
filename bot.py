@@ -34,6 +34,15 @@ async def on_message(message):
         else:
             return None
 
+    if message.content == "!helpme":
+        desc_text = "{0} \n{1} \n{2} \n{3}".format("!helpme : 명령어 목록 불러오기", \
+                                                    "!owsearch : 오버워치 전적 검색하기", \
+                                                    "!muteall : 현재 보이스 채널에 있는 유저들 모두 음소거 시키기", \
+                                                    "!unmuteall : 모든 사용자 음소거 해제하기")
+        
+        embed = discord.Embed(title="명령어 목록", description=desc_text, color=0x6FA8DC)
+        await message.channel.send(embed=embed)
+
     if message.content == "!owsearch":
         embed = discord.Embed(title="Overwatch 점수 검색", description="'배틀태그#숫자' 형식으로 입력해주세요.", color=0x82CC62)
         embed.set_image(url="https://bnetcmsus-a.akamaihd.net/cms/blog_header/q4/Q4K237E1EGPI1467079634956.jpg")
