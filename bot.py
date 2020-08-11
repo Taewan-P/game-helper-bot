@@ -162,7 +162,7 @@ async def on_message(message):
         
         await message.channel.send("음소거 해제 완료!")
         
-    if message.content == "!doge":
+    if "개" in message.content or message.content == "!doge":
         await message.channel.send("https://i.kym-cdn.com/entries/icons/original/000/013/564/doge.jpg")
 
 app.run(token)
