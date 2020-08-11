@@ -7,6 +7,7 @@ from urllib import parse
 
 app = discord.Client()
 mstatus = 0
+botid = ""
 
 token = os.getenv("TOKEN")
 if not token:
@@ -16,18 +17,20 @@ if not token:
 
 @app.event
 async def on_ready():
+    global botid
     print('Logged in as')
     print(app.user.name)
     print(app.user.id)
     print('------')
     game = discord.Game("Game Helper | !help")
+    botid = await app.application_info().id
     await app.change_presence(status=discord.Status.online, activity=game)
 
 
 @app.event
 async def on_message(message):
-    global mstatus
-    if message.author.bot:
+    global mstatus, botid
+    if message.author.bot and message.author.id == botid:
         if mstatus == 1:
             await message.add_reaction("\u2b55") # O
             await message.add_reaction("\u274c") # X
