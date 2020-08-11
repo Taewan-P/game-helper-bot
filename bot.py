@@ -8,10 +8,11 @@ from urllib import parse
 app = discord.Client()
 mstatus = 0
 
-
-json_data = open(os.getcwd() + "/token/.config.json", encoding='utf-8').read()
-config_json = json.loads(json_data)
-token = config_json["token"]
+token = os.getenv("TOKEN")
+if not token:
+    json_data = open(os.getcwd() + "/token/.config.json", encoding='utf-8').read()
+    config_json = json.loads(json_data)
+    token = config_json["token"]
 
 @app.event
 async def on_ready():
