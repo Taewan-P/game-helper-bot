@@ -144,4 +144,14 @@ async def on_message(message):
                 elif str(reaction.emoji) == "\u274c":
                     await message.channel.send("싫음 소환하지를 마. 귀찮게.")
 
+    if message.content == "!unmuteall":
+        member_list = message.author.voice.channel.members
+        async with message.channel.typing():
+            for member in member_list:
+                await member.edit(mute=False)
+        
+        await message.channel.send("음소거 해제 완료!")
+        
+
+
 app.run(token)
