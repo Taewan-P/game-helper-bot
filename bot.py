@@ -184,7 +184,6 @@ async def on_message(message):
                         #???
                         await message.channel.send("???????")
                     
-
     if message.content == "!muteall":
         if message.author.voice is None:
             await message.channel.send("이 기능을 사용하려면 보이스 채널에 들어가 있어야 합니다!")
