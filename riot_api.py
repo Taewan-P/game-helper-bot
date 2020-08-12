@@ -30,8 +30,9 @@ class Summoner():
             req = Request(request_url + summoner_api_url + self.summoner_id + req_api_key)
             res = urlopen(req).read().decode('utf-8')
         except:
-            return {"None":"None"}
-        return json.loads(res)
+            return [{"message":"없는 소환사입니다"}]
+        info = json.loads(res)
+        return info
 
 
     def get_summoner(self, name):
