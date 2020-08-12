@@ -22,15 +22,15 @@ async def on_ready():
     print(app.user.name)
     print(app.user.id)
     print('------')
-    game = discord.Game("Game Helper | !help")
-    botid = await app.application_info().id
+    game = discord.Game("Game Helper | !helpme")
+    botid = await app.application_info()
     await app.change_presence(status=discord.Status.online, activity=game)
 
 
 @app.event
 async def on_message(message):
     global mstatus, botid
-    if message.author.bot and message.author.id == botid:
+    if message.author.bot and message.author.id == botid.id:
         if mstatus == 1:
             await message.add_reaction("\u2b55") # O
             await message.add_reaction("\u274c") # X
