@@ -133,7 +133,7 @@ async def on_message(message):
                 await message.channel.send("배틀태그가 유효하지 않습니다.")
 
     if message.content == "!lolsearch":
-        embed = discord.Embed(title="롤 전적 검색", description="소환사 이름을 입력하세요 \n단, 소환사 이름만 입력하세요!", color=0x82CC62)
+        embed = discord.Embed(title="롤 소환사 검색", description="소환사 이름을 입력하세요 \n단, 소환사 이름만 입력하세요!", color=0x82CC62)
         await message.channel.send(embed=embed)
 
         def check(m):
@@ -162,9 +162,8 @@ async def on_message(message):
                             티어 : {1} {2}\n \
                             최근 랭크 게임 승률 : {3}\n".format(name, tier, rank, win_rate)
 
-                embed = discord.Embed(title="전적 검색 결과", description=desc_text, url=result_url, color=0x82CC62)
+                embed = discord.Embed(title="소환사 검색 결과", description=desc_text, url=result_url, color=0x82CC62)
                 await message.channel.send(embed=embed)
-
 
     if message.content == "!muteall":
         if message.author.voice is None:
