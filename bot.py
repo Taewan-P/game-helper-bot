@@ -72,15 +72,6 @@ async def on_message(message):
                     roles = bs.findAll("div", attrs={"class": "competitive-rank-tier"})
                     scores = bs.findAll("div", attrs={"class": "competitive-rank-level"})
                     public_status = bs.findAll("p", attrs={"class": "masthead-permission-level-text"})
-                    comp_data = bs.find("div", attrs={"id": "competitive","data-mode": "competitive"})
-                    heroes = comp_data.findAll("div", attrs={"class": "ProgressBar-title"})
-                    play_time = comp_data.findAll("div", attrs={"class": "ProgressBar-description"})
-                    comp_heroes = []
-                    for h in heroes:
-                        comp_heroes.append([h])
-                    
-                    for i in range(len(play_time)):
-                        comp_heroes[i].append(play_time[i])
 
 
                 competitive_roles = [i.get("data-ow-tooltip-text") for i in roles[:len(roles)//2]]
@@ -92,6 +83,17 @@ async def on_message(message):
                     if public_status[0].text == "비공개 프로필":
                         await message.channel.send("비공개 프로필입니다. 프로필 공개 설정을 공개로 바꾼 뒤에 사용해 주세요.")
                     else:
+                        comp_data = bs.find("div", attrs={"id": "competitive","data-mode": "competitive"})
+                        heroes = comp_data.findAll("div", attrs={"class": "ProgressBar-title"})
+                        play_time = comp_data.findAll("div", attrs={"class": "ProgressBar-description"})
+                        comp_heroes = []
+
+                        for h in heroes:
+                            comp_heroes.append([h])
+                        
+                        for i in range(len(play_time)):
+                            comp_heroes[i].append(play_time[i])
+
                         score_result = ""
                         top_five_result = ""
                         top_five = [[d[0].text, d[1].text] for d in comp_heroes] if len(comp_heroes) <= 5 else [[d[0].text, d[1].text] for d in comp_heroes[:5]]
