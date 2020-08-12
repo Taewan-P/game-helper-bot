@@ -151,19 +151,39 @@ async def on_message(message):
                 # Misinput. Aborting
                 await message.channel.send("소환사 이름을 잘못 입력하셨습니다.")
             else:
-                info = summoner.summoner_info[0]
-                name = info.get("summonerName", "NULL")
-                tier = info.get("tier", "")
-                rank = info.get("rank" "")
-                win_rate = "{} %".format(int(summoner.recent_winning_rate*100))
-                result_url = "http://www.op.gg/summoner/userName=" + parse.quote(name)
+                info = summoner.summoner_info
+                if info:
+                    info = info[0]
+                    msg = info.get("message")
+                    if not msg:
+                        name = info.get("summonerName", "NULL")
+                        tier = info.get("tier", "")
+                        rank = info.get("rank" "")
+                        win_rate = "{} %".format(int(summoner.recent_winning_rate*100))
+                        result_url = "http://www.op.gg/summoner/userName=" + parse.quote(name)
 
-                desc_text = "소환사 이름 : {0}\n \
-                            티어 : {1} {2}\n \
-                            최근 랭크 게임 승률 : {3}\n".format(name, tier, rank, win_rate)
-
-                embed = discord.Embed(title="소환사 검색 결과", description=desc_text, url=result_url, color=0x82CC62)
-                await message.channel.send(embed=embed)
+                        desc_text = "소환사 이름 : {0}\n \
+                                    티어 : {1} {2}\n \
+                                    최근 랭크 게임 승률 : {3}\n".format(name, tier, rank, win_rate)
+                        embed = discord.Embed(title="소환사 검색 결과", description=desc_text, url=result_url, color=0x82CC62)
+                    else:
+                        desc_text = "없는 소환사 입니다."
+                        embed = discord.Embed(title="소환사 검색 결과", description=desc_text, color=0x82CC62)
+                    
+                    await message.channel.send(embed=embed)
+                else:
+                    name = summoner.account.get("name")
+                    if name:
+                        # Exists, but no recent comp play
+                        desc_text = "소환사 이름 : {0}\n \
+                                    티어 : 플레이 내역이 없습니다.\n \
+                                    최근 랭크 게임 승률 : 플레이 내역이 없습니다.\n".format(name)
+                        embed = discord.Embed(title="소환사 검색 결과", description=desc_text, color=0x82CC62)
+                        await message.channel.send(embed=embed)
+                    else:
+                        #???
+                        await message.channel.send("???????")
+                    
 
     if message.content == "!muteall":
         if message.author.voice is None:
