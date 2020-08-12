@@ -4,12 +4,14 @@ import discord, asyncio
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 from urllib import parse
+from riot_api import *
 
 app = discord.Client()
 mstatus = 0
 botid = ""
 
 token = os.getenv("TOKEN")
+lol_apikey = os.getenv("API_KEY")
 if not token:
     json_data = open(os.getcwd() + "/token/.config.json", encoding='utf-8').read()
     config_json = json.loads(json_data)
@@ -128,6 +130,40 @@ async def on_message(message):
             else:
                 # Invalid
                 await message.channel.send("배틀태그가 유효하지 않습니다.")
+
+    if message.content == "!lolsearch":
+        embed = discord.Embed(title="롤 전적 검색", description="소환사 이름을 입력하세요 \n단, 소환사 이름만 입력하세요!", color=0x82CC62)
+        await message.channel.send(embed=embed)
+
+        def check(m):
+            return m.author == message.author and m.channel == message.channel
+
+        try:
+            m = await app.wait_for('message',timeout=25.0, check=check)
+        except asyncio.TimeoutError:
+            await message.channel.send("시간초과!")
+        else:
+            async with message.channel.typing():
+                summoner = Summoner(m.content)
+
+            if summoner.account_id == "":
+                # Misinput. Aborting
+                await message.channel.send("소환사 이름을 잘못 입력하셨습니다.")
+            else:
+                info = summoner.summoner_info[0]
+                name = info.get("summonerName", "NULL")
+                tier = info.get("tier", "")
+                rank = info.get("rank" "")
+                win_rate = "{} %".format(int(summoner.recent_winning_rate*100))
+                result_url = "http://www.op.gg/summoner/userName=" + parse.quote(name)
+
+                desc_text = "소환사 이름 : {0}\n \
+                            티어 : {1} {2}\n \
+                            최근 랭크 게임 승률 : {3}\n".format(name, tier, rank, win_rate)
+
+                embed = discord.Embed(title="전적 검색 결과", description=desc_text, url=result_url, color=0x82CC62)
+                await message.channel.send(embed=embed)
+
 
     if message.content == "!muteall":
         if message.author.voice is None:
