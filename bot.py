@@ -41,8 +41,9 @@ async def on_message(message):
             return None
 
     if message.content == "!helpme":
-        desc_text = "{0} \n{1} \n{2} \n{3}".format("!helpme : 명령어 목록 불러오기", \
+        desc_text = "{0} \n{1} \n{2} \n{3} \n{4}".format("!helpme : 명령어 목록 불러오기", \
                                                     "!owsearch : 오버워치 전적 검색하기", \
+                                                    "!lolsearch : 롤 소환사 검색하기", \
                                                     "!muteall : 현재 보이스 채널에 있는 유저들 모두 음소거 시키기", \
                                                     "!unmuteall : 모든 사용자 음소거 해제하기")
         
